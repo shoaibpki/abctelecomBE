@@ -1,6 +1,7 @@
 package com.ltd.abctelecom.service;
 
 import com.ltd.abctelecom.entity.Users;
+import com.ltd.abctelecom.exception.CustomException;
 import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.UserRepository;
@@ -21,18 +22,33 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserModel getUser(String email, String password) {
 //        checking super user admin
-        UserModel mUser = new UserModel();
         if ( email.equalsIgnoreCase ("admin@abc.com") &&
                 password.equalsIgnoreCase("123")){
 //            set admin user default properties
-            mUser.builder()
+            log.info("email: {}, password: {}",email, password);
+            UserModel mUser = UserModel.builder()
                     .userName("Admin")
                     .role(Role.ADMIN)
                     .email(email)
                     .build();
             return mUser;
+        }else { // checking other users
+            try {
+                Users user = userRepository.findByEmailAndPassword(email, password);
+                UserModel muser = UserModel.builder()
+                        .email(user.getEmail())
+                        .role(Role.valueOf(user.getRole()))
+                        .userName(user.getUserName())
+                        .build();
+                return muser;
+
+            }catch (Exception e){
+                throw new CustomException(
+                        "User not found by given email or entered wrong passowrd",
+                        "USER_NOT_FOUND"
+                        );
+            }
         }
-        return null;
     }
 
     @Override
