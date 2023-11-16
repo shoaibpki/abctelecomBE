@@ -1,10 +1,7 @@
 package com.ltd.abctelecom.model;
 
 import com.ltd.abctelecom.entity.Services;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -12,6 +9,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserModel {
 
     private Long serviceId;

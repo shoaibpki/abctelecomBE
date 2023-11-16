@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
     @Override
     public UserModel getUser(UserModel user) {
+//        cheking super user admin
         if (user.getEmail().equalsIgnoreCase("admin@abc.com") &&
-                user.getPassword() == "123"){
+                user.getPassword().equalsIgnoreCase("123")){
+            log.info("{}",user);
             return user;
         }
         return null;
