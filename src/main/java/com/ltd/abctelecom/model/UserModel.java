@@ -13,10 +13,11 @@ import java.util.Set;
 @Builder
 public class UserModel {
 
-    private Long serviceId;
+    private Long userId;
     private String userName;
     private String email;
     private String password;
     private Role role;
+    private String pinCode;
     private Set<Services> services;
 }

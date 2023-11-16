@@ -25,6 +25,7 @@ public class Users {
     private String email;
 
     private String role;
+    private String pinCode;
 
     @ManyToMany(cascade = {
             CascadeType.MERGE,

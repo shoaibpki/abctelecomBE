@@ -9,6 +9,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Log4j2
 public class UserServiceImpl implements UserService{
@@ -32,7 +37,7 @@ public class UserServiceImpl implements UserService{
                     .email(email)
                     .build();
             return mUser;
-        }else { // checking other users
+        }else { // checking other user for login
             try {
                 Users user = userRepository.findByEmailAndPassword(email, password);
                 UserModel muser = UserModel.builder()
@@ -53,6 +58,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String creatUser(UserModel user) {
+        log.info("Adding User..: {}",user);
         Users muser = Users.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
@@ -61,5 +67,21 @@ public class UserServiceImpl implements UserService{
                 .build();
         userRepository.save(muser);
         return "Successfully Created user with id : "+ muser.getUserId();
+    }
+
+    @Override
+    public List<UserModel> getAllUsers() {
+        List<Users> users = userRepository.findAll();
+        return users.stream().map( user ->
+                UserModel.builder()
+                        .userId(user.getUserId())
+                        .services(user.getServices())
+                        .pinCode(user.getPinCode())
+                        .role(Role.valueOf(user.getRole()))
+                        .userName(user.getUserName())
+                        .email(user.getEmail())
+                        .build()
+
+        ).collect(Collectors.toList());
     }
 }
