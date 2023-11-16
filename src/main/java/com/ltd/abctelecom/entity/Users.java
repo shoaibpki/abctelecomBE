@@ -1,10 +1,7 @@
 package com.ltd.abctelecom.entity;
 
 import com.ltd.abctelecom.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Users {
 
     @Id
@@ -26,7 +24,7 @@ public class Users {
     @PrimaryKeyJoinColumn
     private String email;
 
-    private Role role;
+    private String role;
 
     @ManyToMany(cascade = {
             CascadeType.MERGE,

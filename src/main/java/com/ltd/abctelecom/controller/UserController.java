@@ -5,10 +5,7 @@ import com.ltd.abctelecom.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("abctelecom/users")
 @RestController
@@ -22,9 +19,15 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    ResponseEntity<UserModel> getUser(@RequestBody UserModel user){
-        UserModel mUser = userService.getUser(user);
+    ResponseEntity<UserModel> getUser(@RequestParam String email, @RequestParam String password){
+        UserModel mUser = userService.getUser(email, password);
         log.info("Admin User: {}", mUser);
         return new ResponseEntity<>(mUser, HttpStatus.OK);
+    }
+
+    @PostMapping
+    ResponseEntity<String> createUser(@RequestBody UserModel user){
+        String msg = userService.creatUser(user);
+        return new ResponseEntity<>(msg, HttpStatus.CREATED);
     }
 }
