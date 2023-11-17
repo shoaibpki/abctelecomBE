@@ -11,4 +11,6 @@ public interface UserService {
     String creatUser(UserModel user);
 
     List<UserModel> getAllUsers();
+
+    UserModel updateUser(Long id, UserModel userModel);
 }

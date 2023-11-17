@@ -6,13 +6,12 @@ import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Service
 @Log4j2
@@ -83,5 +82,22 @@ public class UserServiceImpl implements UserService{
                         .build()
 
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserModel updateUser(Long id, UserModel userModel) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(
+                        "User not found by given id: {}"+ id,
+                        "USER_NOT_FOUND"
+                ));
+        user.setUserName(userModel.getUserName());
+        user.setEmail(userModel.getEmail());
+        user.setRole(userModel.getRole().name());
+//        user.setPassword(userModel.getPassword());
+        user.setPinCode(userModel.getPinCode());
+        userRepository.save(user);
+        copyProperties(user, userModel);
+        return userModel;
     }
 }

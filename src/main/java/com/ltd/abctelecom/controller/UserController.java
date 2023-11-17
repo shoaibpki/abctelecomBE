@@ -39,4 +39,10 @@ public class UserController {
         List<UserModel> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @PutMapping("{id}")
+    ResponseEntity<UserModel> updateUser(@PathVariable Long id, @RequestBody UserModel userModel){
+        UserModel user = userService.updateUser(id, userModel);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
