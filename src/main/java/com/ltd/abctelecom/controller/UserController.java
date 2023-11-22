@@ -4,6 +4,7 @@ import com.ltd.abctelecom.entity.Users;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.service.UserService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +16,8 @@ import java.util.List;
 @Log4j2
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    UserService userService;
 
     @GetMapping("/login")
     ResponseEntity<UserModel> getUser(@RequestParam String email, @RequestParam String password){
@@ -30,7 +28,7 @@ public class UserController {
 
     @PostMapping
     ResponseEntity<String> createUser(@RequestBody UserModel user){
-        String msg = userService.creatUser(user);
+        String msg = userService.createUser(user);
         return new ResponseEntity<>(msg, HttpStatus.CREATED);
     }
 

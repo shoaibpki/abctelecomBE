@@ -1,6 +1,7 @@
 package com.ltd.abctelecom.entity;
 
 import com.ltd.abctelecom.model.Role;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;

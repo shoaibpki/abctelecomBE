@@ -6,6 +6,7 @@ import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +18,12 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @Log4j2
 public class UserServiceImpl implements UserService{
 
-    private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public UserModel getUser(String email, String password) {
-//        checking super user admin
+//        checking user admin
         if ( email.equalsIgnoreCase ("admin@abc.com") &&
                 password.equalsIgnoreCase("123")){
 //            set admin user default properties
@@ -43,6 +41,7 @@ public class UserServiceImpl implements UserService{
                         .email(user.getEmail())
                         .role(Role.valueOf(user.getRole()))
                         .userName(user.getUserName())
+                        .password(user.getPassword())
                         .build();
                 return muser;
 
@@ -56,16 +55,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String creatUser(UserModel user) {
+    public String createUser(UserModel user) {
         log.info("Adding User..: {}",user);
-        Users muser = Users.builder()
+        Users mUser = Users.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole().name())
+                .pinCode(user.getPinCode())
                 .build();
-        userRepository.save(muser);
-        return "Successfully Created user with id : "+ muser.getUserId();
+        userRepository.save(mUser);
+        log.info("::{}", mUser);
+//        return "Successfully Created user with id : "+ muser.getUserId();
+        return mUser.getUserId().toString();
     }
 
     @Override

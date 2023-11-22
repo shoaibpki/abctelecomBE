@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     UserModel getUser(String email, String password);
 
-    String creatUser(UserModel user);
+    String createUser(UserModel user);
 
     List<UserModel> getAllUsers();
 
