@@ -50,4 +50,18 @@ public class ServicesServiceImpl implements ServicesService{
         copyProperties(service, serviceModel);
         return serviceModel;
     }
+
+    @Override
+    public ServiceModel updateService(Long id, ServiceModel serviceModel) {
+        Services service = serviceRepository.findById(id)
+                .orElseThrow(() -> new CustomException(
+                        "Service Not Found by given id: "+ id,
+                        "SERVICE_NOT_FOUND"
+                ));
+        service.setDescription(serviceModel.getDescription());
+        service.setName(serviceModel.getName());
+        serviceRepository.save(service);
+        copyProperties(service, serviceModel);
+        return serviceModel;
+    }
 }

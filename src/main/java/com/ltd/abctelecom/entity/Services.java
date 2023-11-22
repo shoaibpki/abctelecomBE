@@ -19,6 +19,7 @@ public class Services {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long serviceId;
     private String name;
+    private String Description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.MERGE,

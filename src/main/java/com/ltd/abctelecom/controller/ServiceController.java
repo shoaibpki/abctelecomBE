@@ -35,4 +35,13 @@ public class ServiceController {
 
         return ResponseEntity.ok(serviceModel);
     }
+
+    @PutMapping("{id}")
+    ResponseEntity<ServiceModel> updateService(
+            @PathVariable Long id,
+            @RequestBody ServiceModel serviceModel){
+        ServiceModel updateService = servicesService.updateService(id, serviceModel);
+
+        return ResponseEntity.ok(updateService);
+    }
 }

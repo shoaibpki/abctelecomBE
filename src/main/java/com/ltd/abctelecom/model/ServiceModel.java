@@ -14,5 +14,6 @@ public class ServiceModel {
 
     private Long serviceId;
     private String name;
+    private String Description;
     private Set<Users> users;
 }
