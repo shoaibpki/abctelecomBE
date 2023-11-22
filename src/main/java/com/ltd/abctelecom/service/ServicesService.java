@@ -13,4 +13,5 @@ public interface ServicesService {
     ServiceModel getServiceById(Long id);
 
     ServiceModel updateService(Long id, ServiceModel serviceModel);
+
 }

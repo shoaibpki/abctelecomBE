@@ -1,24 +1,30 @@
 package com.ltd.abctelecom.service;
 
 import com.ltd.abctelecom.entity.Services;
+import com.ltd.abctelecom.entity.Users;
 import com.ltd.abctelecom.exception.CustomException;
 import com.ltd.abctelecom.model.ServiceModel;
 import com.ltd.abctelecom.repository.ServiceRepository;
+import com.ltd.abctelecom.repository.UserRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Service
+@Log4j2
 public class ServicesServiceImpl implements ServicesService{
 
     @Autowired
     ServiceRepository serviceRepository;
+
     @Override
     public ServiceModel CreateService(ServiceModel service) {
         Services services = Services.builder()
