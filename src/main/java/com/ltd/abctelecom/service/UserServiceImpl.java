@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
 
             }catch (Exception e){
                 throw new CustomException(
-                        "User not found by given email or entered wrong passowrd",
+                        "User not found by given email or entered wrong password",
                         "USER_NOT_FOUND"
                         );
             }
@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService{
                 .build();
         userRepository.save(mUser);
         log.info("::{}", mUser);
-//        return "Successfully Created user with id : "+ muser.getUserId();
-        return mUser.getUserId().toString();
+        return "Successfully Created user with id : "+ mUser.getId();
+//        return mUser.getId().toString();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService{
         List<Users> users = userRepository.findAll();
         return users.stream().map( user ->
                 UserModel.builder()
-                        .userId(user.getUserId())
+                        .id(user.getId())
                         .services(user.getServices())
                         .pinCode(user.getPinCode())
                         .role(Role.valueOf(user.getRole()))
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService{
         Users user = userRepository.findById(uid)
                 .orElseThrow(() -> new CustomException(
                         "User not Found by given Id: "+uid,
-                        "USER_NOT_fOUND"
+                        "USER_NOT_FOUND"
                 ));
         Services service = serviceRepository.findById(sid)
                 .orElse(null);
@@ -160,5 +160,4 @@ public class UserServiceImpl implements UserService{
         userModel.setRole(Role.valueOf(user.getRole()));
         return userModel;
     }
-
 }

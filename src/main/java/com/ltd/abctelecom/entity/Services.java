@@ -21,10 +21,10 @@ public class Services {
     private String name;
     private String Description;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.MERGE,
             CascadeType.PERSIST
     },mappedBy = "services")
-    @JsonIgnore
     private Set<Users> users = new HashSet<>();
 }

@@ -29,6 +29,7 @@ public class ServicesServiceImpl implements ServicesService{
     public ServiceModel CreateService(ServiceModel service) {
         Services services = Services.builder()
                 .name(service.getName())
+                .Description(service.getDescription())
                 .build();
         serviceRepository.save(services);
         copyProperties(services, service);

@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 public class UserModel {
 
-    private Long userId;
+    private Long id;
     private String userName;
     private String email;
     private String password;

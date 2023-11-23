@@ -5,7 +5,9 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +21,7 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
     private String userName;
     private String password;
 
@@ -38,5 +40,8 @@ public class Users {
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
     private Set<Services> services = new HashSet<>();
+
+    @OneToMany(mappedBy = "customer")
+    private List<Complaint> complaints = new ArrayList<>();
 
 }

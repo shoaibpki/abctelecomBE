@@ -68,7 +68,7 @@ class UserServiceImplTest {
 
     private Users getMockUser() {
         return Users.builder()
-                .userId(1L)
+                .id(1L)
                 .userName("Shoaib")
                 .email("shoaib@abc.com")
                 .role("MANAGER")
@@ -91,7 +91,7 @@ class UserServiceImplTest {
         verify(userRepository,times(1))
                 .findAll();
 //        Assertion
-        assertEquals(users.get(0).getUserId(), userList.get(0).getUserId());
+        assertEquals(users.get(0).getId(), userList.get(0).getUserId());
     }
 
     @DisplayName("Create User")
@@ -111,7 +111,7 @@ class UserServiceImplTest {
                 .save(any());
 
         //Assertion
-        assertEquals(user.getUserId().toString(), userId);
+        assertEquals(user.getId().toString(), userId);
 
     }
 
