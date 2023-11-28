@@ -1,8 +1,10 @@
 package com.ltd.abctelecom.model;
 
+import com.ltd.abctelecom.entity.Complaint;
 import com.ltd.abctelecom.entity.Services;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,4 +22,6 @@ public class UserModel {
     private Role role;
     private String pinCode;
     private Set<Services> services;
+    private List<Complaint> complaints;
+
 }

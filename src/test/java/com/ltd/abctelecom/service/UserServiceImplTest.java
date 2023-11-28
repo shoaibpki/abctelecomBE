@@ -4,6 +4,7 @@ import com.ltd.abctelecom.entity.Users;
 import com.ltd.abctelecom.exception.CustomException;
 import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
+import com.ltd.abctelecom.repository.ServiceRepository;
 import com.ltd.abctelecom.repository.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,9 @@ class UserServiceImplTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    ServiceRepository serviceRepository;
 
     @InjectMocks
     UserService userService = new UserServiceImpl();
@@ -91,11 +95,11 @@ class UserServiceImplTest {
         verify(userRepository,times(1))
                 .findAll();
 //        Assertion
-        assertEquals(users.get(0).getId(), userList.get(0).getUserId());
+        assertEquals(users.get(0).getId(), userList.get(0).getId());
     }
 
     @DisplayName("Create User")
-    @Disabled
+//    @Disabled
     @Test
     public void createUserTest(){
         // Mocking

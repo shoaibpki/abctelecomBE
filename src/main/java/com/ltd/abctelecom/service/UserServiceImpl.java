@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService{
                 .build();
         userRepository.save(mUser);
         log.info("::{}", mUser);
-        return "Successfully Created user with id : "+ mUser.getId();
-//        return mUser.getId().toString();
+//        return "Successfully Created user with id : "+ mUser.getId();
+        return mUser.getId().toString();
     }
 
     @Override
@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService{
                         "User not found by given id: {}"+ id,
                         "USER_NOT_FOUND"
                 ));
+
         user.setUserName(userModel.getUserName());
         user.setEmail(userModel.getEmail());
         user.setRole(userModel.getRole().name());

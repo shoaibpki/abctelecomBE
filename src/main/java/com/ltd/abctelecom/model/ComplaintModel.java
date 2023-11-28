@@ -1,31 +1,26 @@
-package com.ltd.abctelecom.entity;
+package com.ltd.abctelecom.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ltd.abctelecom.entity.Users;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.ManyToOne;
 import java.time.Instant;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class Complaint {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ComplaintModel {
     private Long complaintId;
     private String complaint;
     private String referenceNo;
-    private String status;
+    private ComplaintStatus status;
     private Long engineerId;
     private Instant cDate;
     private Instant rDate;
-
-    @JsonIgnore
-    @ManyToOne
     private Users customer;
+
 }
