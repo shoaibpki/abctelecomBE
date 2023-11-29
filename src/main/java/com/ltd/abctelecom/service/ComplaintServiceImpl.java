@@ -145,4 +145,36 @@ public class ComplaintServiceImpl implements ComplaintService {
                     "NOT_AUTHORISED");
         }
     }
+
+    @Override
+    public ComplaintModel resolvedComplaint(Long cid, Long eid) {
+        Complaint complaint = complaintRepository.findById(cid)
+                .orElseThrow(()-> new CustomException(
+                        "Complaint not Found by given id: "+cid,
+                        "NOT_FOUND"));
+
+        if (userRepository.existsByIdAndRole(eid, "ENGINEER")){
+            complaint.setStatus("CLOSED");
+            complaint.setRDate(Instant.now());
+            complaintRepository.save(complaint);
+
+            ComplaintModel complaintModel = ComplaintModel.builder()
+                    .engineerId(complaint.getEngineerId())
+                    .complaintId(complaint.getComplaintId())
+                    .complaint(complaint.getComplaint())
+                    .jDate(complaint.getJDate())
+                    .referenceNo(complaint.getReferenceNo())
+                    .status(ComplaintStatus.valueOf(complaint.getStatus()))
+                    .cDate(complaint.getCDate())
+                    .rDate(complaint.getRDate())
+                    .customer(complaint.getCustomer())
+                    .build();
+            return complaintModel;
+
+        }else {
+            throw new CustomException(
+                    "Not the Engineer by given id: "+eid,
+                    "NOT_AUTHORISED");
+        }
+    }
 }

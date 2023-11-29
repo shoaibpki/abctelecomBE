@@ -1,7 +1,5 @@
 package com.ltd.abctelecom.controller;
 
-import com.ltd.abctelecom.entity.Complaint;
-import com.ltd.abctelecom.entity.Users;
 import com.ltd.abctelecom.model.ComplaintModel;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.service.ComplaintService;
@@ -44,6 +42,14 @@ public class ComplaintController {
             @PathVariable Long cid,
             @PathVariable Long eid){
         ComplaintModel complaintModel = complaintService.assignEngineerToComplaint(cid, eid);
+        return ResponseEntity.ok(complaintModel);
+    }
+
+    @PatchMapping("complaint/{cid}/engineer/{eid}")
+    ResponseEntity<ComplaintModel> resolvedComplaint(
+            @PathVariable Long cid,
+            @PathVariable Long eid){
+        ComplaintModel complaintModel = complaintService.resolvedComplaint(cid, eid);
         return ResponseEntity.ok(complaintModel);
     }
 

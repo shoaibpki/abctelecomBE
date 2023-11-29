@@ -14,4 +14,6 @@ public interface ComplaintService {
     UserModel searchEngineerByPinCode(Long cid);
 
     ComplaintModel assignEngineerToComplaint(Long cid, Long eid);
+
+    ComplaintModel resolvedComplaint(Long cid, Long eid);
 }
