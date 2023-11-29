@@ -10,7 +10,6 @@ import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.ComplaintRepository;
 import com.ltd.abctelecom.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +73,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
     }
 
-    @Override
-    public List<ComplaintModel> getAllPendingComplains(String status) {
+    public List<ComplaintModel> getAllComplaintsByStatus(String status) {
         List<Complaint> complains = complaintRepository
                 .findByStatus(status.toUpperCase(Locale.ROOT));
         log.info("::{}", complains);
@@ -114,6 +112,37 @@ public class ComplaintServiceImpl implements ComplaintService {
             throw new CustomException(
                     "Engineer not available in this area for a while",
                     "NOT_FOUND");
+        }
+    }
+
+    @Override
+    public ComplaintModel assignEngineerToComplaint(Long cid, Long eid) {
+        Complaint complaint = complaintRepository.findById(cid)
+                .orElseThrow(()-> new CustomException(
+                        "Complaint not Found by given id: "+cid,
+                        "NOT_FOUND"));
+
+        if (userRepository.existsByIdAndRole(eid, "ENGINEER")){
+            complaint.setJDate(Instant.now());
+            complaint.setStatus("ON_GOING");
+            complaint.setEngineerId(eid);
+            complaintRepository.save(complaint);
+
+            ComplaintModel complaintModel = ComplaintModel.builder()
+                    .engineerId(complaint.getEngineerId())
+                    .complaintId(complaint.getComplaintId())
+                    .complaint(complaint.getComplaint())
+                    .jDate(complaint.getJDate())
+                    .referenceNo(complaint.getReferenceNo())
+                    .status(ComplaintStatus.valueOf(complaint.getStatus()))
+                    .cDate(complaint.getCDate())
+                    .build();
+            return complaintModel;
+
+        }else {
+            throw new CustomException(
+                    "Not the Engineer by given id: "+eid,
+                    "NOT_AUTHORISED");
         }
     }
 }

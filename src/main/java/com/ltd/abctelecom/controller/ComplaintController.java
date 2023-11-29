@@ -28,8 +28,8 @@ public class ComplaintController {
     }
 
     @GetMapping("complaint/{status}")
-    ResponseEntity<List<ComplaintModel>> getAllPendingComplains(@PathVariable String status){
-        List<ComplaintModel> complains = complaintService.getAllPendingComplains(status);
+    ResponseEntity<List<ComplaintModel>> getAllComplaintsByStatus(@PathVariable String status){
+        List<ComplaintModel> complains = complaintService.getAllComplaintsByStatus(status);
         return ResponseEntity.ok(complains);
     }
 
@@ -37,6 +37,14 @@ public class ComplaintController {
     ResponseEntity<UserModel> searchEngineerByPincode(@PathVariable Long cid){
         UserModel userModel = complaintService.searchEngineerByPinCode(cid);
         return ResponseEntity.ok(userModel);
+    }
+
+    @PutMapping("complaint/{cid}/engineer/{eid}")
+    ResponseEntity<ComplaintModel> assignEngineerToComplaint(
+            @PathVariable Long cid,
+            @PathVariable Long eid){
+        ComplaintModel complaintModel = complaintService.assignEngineerToComplaint(cid, eid);
+        return ResponseEntity.ok(complaintModel);
     }
 
 

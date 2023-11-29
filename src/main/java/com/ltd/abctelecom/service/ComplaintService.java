@@ -9,7 +9,9 @@ import java.util.List;
 public interface ComplaintService {
     UserModel createComplaint(Long uid, ComplaintModel complaintModel);
 
-    List<ComplaintModel> getAllPendingComplains(String status);
+    List<ComplaintModel> getAllComplaintsByStatus(String status);
 
     UserModel searchEngineerByPinCode(Long cid);
+
+    ComplaintModel assignEngineerToComplaint(Long cid, Long eid);
 }
