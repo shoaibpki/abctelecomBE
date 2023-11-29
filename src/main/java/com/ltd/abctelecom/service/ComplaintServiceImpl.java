@@ -90,4 +90,30 @@ public class ComplaintServiceImpl implements ComplaintService {
                         .build()
         ).collect(Collectors.toList());
     }
+
+    @Override
+    public UserModel searchEngineerByPinCode(Long cid) {
+        Complaint complaint = complaintRepository.findById(cid)
+                .orElseThrow(() -> new CustomException(
+                        "Wrong complaint id is given",
+                        "NOT_FOUND"
+                ));
+        try {
+            Users user = complaint.getCustomer();
+            Users engineer =
+                    userRepository.findByPinCodeAndRole(user.getPinCode(),"ENGINEER");
+            UserModel userModel = UserModel.builder()
+                    .id(engineer.getId())
+                    .userName(engineer.getUserName())
+                    .email(engineer.getEmail())
+                    .pinCode(engineer.getPinCode())
+                    .role(Role.valueOf(engineer.getRole()))
+                    .build();
+            return userModel;
+        }catch (Exception e){
+            throw new CustomException(
+                    "Engineer not available in this area for a while",
+                    "NOT_FOUND");
+        }
+    }
 }

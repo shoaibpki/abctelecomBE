@@ -6,6 +6,7 @@ import com.ltd.abctelecom.model.ComplaintModel;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +24,19 @@ public class ComplaintController {
             @PathVariable Long uid,
             @RequestBody ComplaintModel complaintModel){
         UserModel user = complaintService.createComplaint(uid, complaintModel);
-        return ResponseEntity.ok(user);
+        return new  ResponseEntity(user, HttpStatus.CREATED);
     }
 
     @GetMapping("complaint/{status}")
     ResponseEntity<List<ComplaintModel>> getAllPendingComplains(@PathVariable String status){
         List<ComplaintModel> complains = complaintService.getAllPendingComplains(status);
         return ResponseEntity.ok(complains);
+    }
+
+    @GetMapping("complaint/{cid}/engineer")
+    ResponseEntity<UserModel> searchEngineerByPincode(@PathVariable Long cid){
+        UserModel userModel = complaintService.searchEngineerByPinCode(cid);
+        return ResponseEntity.ok(userModel);
     }
 
 

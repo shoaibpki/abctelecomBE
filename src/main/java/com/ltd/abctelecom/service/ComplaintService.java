@@ -10,4 +10,6 @@ public interface ComplaintService {
     UserModel createComplaint(Long uid, ComplaintModel complaintModel);
 
     List<ComplaintModel> getAllPendingComplains(String status);
+
+    UserModel searchEngineerByPinCode(Long cid);
 }

@@ -20,6 +20,7 @@ public class ComplaintModel {
     private ComplaintStatus status;
     private Long engineerId;
     private Instant cDate;
+    private Instant jDate;
     private Instant rDate;
     private Users customer;
 

@@ -23,6 +23,7 @@ public class Complaint {
     private String status;
     private Long engineerId;
     private Instant cDate;
+    private Instant jDate;
     private Instant rDate;
 
     @JsonIgnore
