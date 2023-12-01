@@ -147,14 +147,12 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public ComplaintModel resolvedComplaint(Long cid, Long eid) {
+    public ComplaintModel resolvedComplaint(Long cid) {
         Complaint complaint = complaintRepository.findById(cid)
                 .orElseThrow(()-> new CustomException(
                         "Complaint not Found by given id: "+cid,
                         "NOT_FOUND"));
-
-        if (userRepository.existsByIdAndRole(eid, "ENGINEER")){
-            complaint.setStatus("CLOSED");
+            complaint.setStatus("RESOLVED");
             complaint.setRDate(Instant.now());
             complaintRepository.save(complaint);
 
@@ -170,11 +168,40 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .customer(complaint.getCustomer())
                     .build();
             return complaintModel;
+    }
 
-        }else {
+    @Override
+    public List<Complaint> getComplaintsByEngineerId(Long uid) {
+        try{
+            List<Complaint> complaints =
+                    complaintRepository.findByEngineerIdAndStatus(uid, "ON_GOING");
+
+            return complaints;
+        }catch (Exception e){
             throw new CustomException(
-                    "Not the Engineer by given id: "+eid,
-                    "NOT_AUTHORISED");
+                    "Engineer not Found by given Id"+ uid,
+                    "NOT_FOUND");
         }
+    }
+
+    @Override
+    public ComplaintModel jobNotDone(Long cid) {
+        Complaint complaint = complaintRepository.findById(cid)
+                .orElseThrow(()-> new CustomException("",""));
+        complaint.setRDate(null);
+        complaint.setStatus("ESCALATED");
+        complaintRepository.save(complaint);
+        ComplaintModel complaintModel = ComplaintModel.builder()
+                .complaintId(complaint.getComplaintId())
+                .referenceNo(complaint.getReferenceNo())
+                .complaint(complaint.getComplaint())
+                .jDate(complaint.getJDate())
+                .engineerId(complaint.getEngineerId())
+                .cDate(complaint.getCDate())
+                .status(ComplaintStatus.valueOf(complaint.getStatus()))
+                .rDate(complaint.getRDate())
+                .customer(complaint.getCustomer())
+                .build();
+        return complaintModel;
     }
 }

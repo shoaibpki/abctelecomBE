@@ -1,6 +1,6 @@
 package com.ltd.abctelecom.service;
 
-import com.ltd.abctelecom.entity.Users;
+import com.ltd.abctelecom.entity.Complaint;
 import com.ltd.abctelecom.model.ComplaintModel;
 import com.ltd.abctelecom.model.UserModel;
 
@@ -15,5 +15,9 @@ public interface ComplaintService {
 
     ComplaintModel assignEngineerToComplaint(Long cid, Long eid);
 
-    ComplaintModel resolvedComplaint(Long cid, Long eid);
+    ComplaintModel resolvedComplaint(Long cid);
+
+    List<Complaint> getComplaintsByEngineerId(Long uid);
+
+    ComplaintModel jobNotDone(Long cid);
 }

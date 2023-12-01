@@ -1,5 +1,6 @@
 package com.ltd.abctelecom.controller;
 
+import com.ltd.abctelecom.entity.Complaint;
 import com.ltd.abctelecom.model.ComplaintModel;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.service.ComplaintService;
@@ -17,7 +18,7 @@ public class ComplaintController {
     @Autowired
     ComplaintService complaintService;
 
-    @PostMapping("user/{uid}/complaint")
+    @PostMapping("customer/{uid}/complaint")
     ResponseEntity<UserModel> createComplaint(
             @PathVariable Long uid,
             @RequestBody ComplaintModel complaintModel){
@@ -31,8 +32,9 @@ public class ComplaintController {
         return ResponseEntity.ok(complains);
     }
 
+
     @GetMapping("complaint/{cid}/engineer")
-    ResponseEntity<UserModel> searchEngineerByPincode(@PathVariable Long cid){
+    ResponseEntity<UserModel> searchEngineerByPinCode(@PathVariable Long cid){
         UserModel userModel = complaintService.searchEngineerByPinCode(cid);
         return ResponseEntity.ok(userModel);
     }
@@ -45,14 +47,27 @@ public class ComplaintController {
         return ResponseEntity.ok(complaintModel);
     }
 
-    @PatchMapping("complaint/{cid}/engineer/{eid}")
-    ResponseEntity<ComplaintModel> resolvedComplaint(
-            @PathVariable Long cid,
-            @PathVariable Long eid){
-        ComplaintModel complaintModel = complaintService.resolvedComplaint(cid, eid);
+    @GetMapping("engineer/{uid}/complaint")
+    ResponseEntity<List<Complaint>> getComplaintsByEngineerId(@PathVariable Long uid){
+
+        List<Complaint> complaints = complaintService.getComplaintsByEngineerId(uid);
+
+        return ResponseEntity.ok(complaints);
+
+    }
+
+    @PatchMapping("engineer/complaint/{cid}")
+    ResponseEntity<ComplaintModel> resolvedComplaint(@PathVariable Long cid){
+        ComplaintModel complaintModel = complaintService.resolvedComplaint(cid);
         return ResponseEntity.ok(complaintModel);
     }
 
+    @PutMapping("engineer/complaint/{cid}")
+    ResponseEntity<ComplaintModel> jobNotDone(@PathVariable Long cid){
 
+        ComplaintModel complaintModel = complaintService.jobNotDone(cid);
+        return ResponseEntity.ok(complaintModel);
+
+    }
 
 }
