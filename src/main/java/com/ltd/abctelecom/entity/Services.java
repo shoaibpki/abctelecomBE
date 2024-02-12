@@ -1,10 +1,12 @@
 package com.ltd.abctelecom.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,4 +29,8 @@ public class Services {
             CascadeType.PERSIST
     },mappedBy = "services")
     private Set<Users> users = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "service", cascade = CascadeType.MERGE)
+    private List<Complaint> complaints;
 }

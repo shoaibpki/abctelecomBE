@@ -34,7 +34,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     UserRepository userRepository;
     @Override
-    public UserModel createComplaint(Long uid, ComplaintModel complaintModel) {
+    public ComplaintModel createComplaint(Long uid, ComplaintModel complaintModel) {
 
         log.info("::{}", complaintModel);
         Format f = new SimpleDateFormat("dd/MMMM/yyyy");
@@ -53,29 +53,22 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .cDate(Instant.now())
                     .status(complaintModel.getStatus().name())
                     .customer(user)
+                    .service(complaintModel.getService())
                     .build();
+            log.info("complaint's values : {}",complaint);
             complaintRepository.save(complaint);
             log.info("Successfully launch a Complaint: {}", complaint);
-            UserModel userModel = UserModel.builder()
-                    .id(user.getId())
-                    .userName(user.getUserName())
-                    .email(user.getEmail())
-                    .role(Role.valueOf(user.getRole()))
-                    .pinCode(user.getPinCode())
-                    .services(user.getServices())
-                    .complaints(user.getComplaints())
-                    .build();
-            return userModel;
+            copyProperties(complaint, complaintModel);
+            return complaintModel;
         }else {
             throw new CustomException(
                     "Customer can launch a Complaint",
                     "NOT_AUTHORISED");
         }
     }
-
-    public List<ComplaintModel> getAllComplaintsByStatus(String status) {
-        List<Complaint> complains = complaintRepository
-                .findByStatus(status.toUpperCase(Locale.ROOT));
+    @Override
+    public List<ComplaintModel> getAllComplaints() {
+        List<Complaint> complains = complaintRepository.findAll();
         log.info("::{}", complains);
         return complains.stream().map( complaint ->
                 ComplaintModel.builder()
@@ -83,7 +76,11 @@ public class ComplaintServiceImpl implements ComplaintService {
                         .complaint(complaint.getComplaint())
                         .referenceNo(complaint.getReferenceNo())
                         .cDate(complaint.getCDate())
+                        .jDate(complaint.getJDate())
                         .customer(complaint.getCustomer())
+                        .feedback(complaint.getFeedback())
+                        .service(complaint.getService())
+                        .engineerId(complaint.getEngineerId())
                         .status(ComplaintStatus.valueOf(complaint.getStatus()))
                         .build()
         ).collect(Collectors.toList());
@@ -100,14 +97,13 @@ public class ComplaintServiceImpl implements ComplaintService {
             Users user = complaint.getCustomer();
             Users engineer =
                     userRepository.findByPinCodeAndRole(user.getPinCode(),"ENGINEER");
-            UserModel userModel = UserModel.builder()
+            return UserModel.builder()
                     .id(engineer.getId())
                     .userName(engineer.getUserName())
                     .email(engineer.getEmail())
                     .pinCode(engineer.getPinCode())
                     .role(Role.valueOf(engineer.getRole()))
                     .build();
-            return userModel;
         }catch (Exception e){
             throw new CustomException(
                     "Engineer not available in this area for a while",
@@ -128,16 +124,18 @@ public class ComplaintServiceImpl implements ComplaintService {
             complaint.setEngineerId(eid);
             complaintRepository.save(complaint);
 
-            ComplaintModel complaintModel = ComplaintModel.builder()
+            return ComplaintModel.builder()
                     .engineerId(complaint.getEngineerId())
                     .complaintId(complaint.getComplaintId())
                     .complaint(complaint.getComplaint())
                     .jDate(complaint.getJDate())
                     .referenceNo(complaint.getReferenceNo())
+                    .feedback(complaint.getFeedback())
+                    .service(complaint.getService())
+                    .customer(complaint.getCustomer())
                     .status(ComplaintStatus.valueOf(complaint.getStatus()))
                     .cDate(complaint.getCDate())
                     .build();
-            return complaintModel;
 
         }else {
             throw new CustomException(
@@ -156,27 +154,25 @@ public class ComplaintServiceImpl implements ComplaintService {
             complaint.setRDate(Instant.now());
             complaintRepository.save(complaint);
 
-            ComplaintModel complaintModel = ComplaintModel.builder()
-                    .engineerId(complaint.getEngineerId())
-                    .complaintId(complaint.getComplaintId())
-                    .complaint(complaint.getComplaint())
-                    .jDate(complaint.getJDate())
-                    .referenceNo(complaint.getReferenceNo())
-                    .status(ComplaintStatus.valueOf(complaint.getStatus()))
-                    .cDate(complaint.getCDate())
-                    .rDate(complaint.getRDate())
-                    .customer(complaint.getCustomer())
-                    .build();
-            return complaintModel;
+        return ComplaintModel.builder()
+                .engineerId(complaint.getEngineerId())
+                .complaintId(complaint.getComplaintId())
+                .complaint(complaint.getComplaint())
+                .jDate(complaint.getJDate())
+                .referenceNo(complaint.getReferenceNo())
+                .feedback(complaint.getFeedback())
+                .status(ComplaintStatus.valueOf(complaint.getStatus()))
+                .cDate(complaint.getCDate())
+                .rDate(complaint.getRDate())
+                .customer(complaint.getCustomer())
+                .build();
     }
 
     @Override
     public List<Complaint> getComplaintsByEngineerId(Long uid) {
         try{
-            List<Complaint> complaints =
-                    complaintRepository.findByEngineerIdAndStatus(uid, "ON_GOING");
 
-            return complaints;
+            return complaintRepository.findByEngineerIdAndStatus(uid, "ON_GOING");
         }catch (Exception e){
             throw new CustomException(
                     "Engineer not Found by given Id"+ uid,
@@ -191,17 +187,28 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaint.setRDate(null);
         complaint.setStatus("ESCALATED");
         complaintRepository.save(complaint);
-        ComplaintModel complaintModel = ComplaintModel.builder()
+        return ComplaintModel.builder()
                 .complaintId(complaint.getComplaintId())
                 .referenceNo(complaint.getReferenceNo())
                 .complaint(complaint.getComplaint())
                 .jDate(complaint.getJDate())
                 .engineerId(complaint.getEngineerId())
+                .feedback(complaint.getFeedback())
                 .cDate(complaint.getCDate())
                 .status(ComplaintStatus.valueOf(complaint.getStatus()))
                 .rDate(complaint.getRDate())
                 .customer(complaint.getCustomer())
                 .build();
-        return complaintModel;
+    }
+
+    @Override
+    public ComplaintModel saveFeedback(ComplaintModel comp) {
+        long cid = comp.getComplaintId();
+        Complaint complaint = complaintRepository.findById(cid)
+                .orElseThrow(()-> new CustomException("",""));
+        complaint.setFeedback(comp.getFeedback());
+        complaintRepository.save(complaint);
+        copyProperties(complaint, comp);
+        return comp;
     }
 }

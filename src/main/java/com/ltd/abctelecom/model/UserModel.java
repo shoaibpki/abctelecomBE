@@ -19,6 +19,7 @@ public class UserModel {
     private String userName;
     private String email;
     private String password;
+    private String mobile;
     private Role role;
     private String pinCode;
     private Set<Services> services;

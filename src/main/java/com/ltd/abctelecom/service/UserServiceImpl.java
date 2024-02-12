@@ -4,7 +4,6 @@ import com.ltd.abctelecom.entity.Services;
 import com.ltd.abctelecom.entity.Users;
 import com.ltd.abctelecom.exception.CustomException;
 import com.ltd.abctelecom.model.Role;
-import com.ltd.abctelecom.model.ServiceModel;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.ServiceRepository;
 import com.ltd.abctelecom.repository.UserRepository;
@@ -28,6 +27,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private ServiceRepository serviceRepository;
 
+    public UserServiceImpl() {
+    }
+
     @Override
     public UserModel getUser(String email, String password) {
 //        checking user admin
@@ -35,23 +37,26 @@ public class UserServiceImpl implements UserService{
                 password.equalsIgnoreCase("123")){
 //            set admin user default properties
             log.info("email: {}, password: {}",email, password);
-            UserModel mUser = UserModel.builder()
+            return UserModel.builder()
                     .userName("Admin")
                     .role(Role.ADMIN)
                     .email(email)
+                    .password(password)
                     .build();
-            return mUser;
         }else { // checking other user for login
             try {
                 Users user = userRepository.findByEmailAndPassword(email, password);
-                UserModel muser = UserModel.builder()
+                return UserModel.builder()
+                        .id(user.getId())
                         .email(user.getEmail())
                         .role(Role.valueOf(user.getRole()))
                         .userName(user.getUserName())
+                        .mobile((user.getMobile()))
                         .password(user.getPassword())
+                        .services(user.getServices())
+                        .complaints(user.getComplaints())
+                        .pinCode(user.getPinCode())
                         .build();
-                return muser;
-
             }catch (Exception e){
                 throw new CustomException(
                         "User not found by given email or entered wrong password",
@@ -70,6 +75,8 @@ public class UserServiceImpl implements UserService{
                 .password(user.getPassword())
                 .role(user.getRole().name())
                 .pinCode(user.getPinCode())
+                .mobile(user.getMobile())
+                .services(user.getServices())
                 .build();
         userRepository.save(mUser);
         log.info("::{}", mUser);
@@ -85,11 +92,12 @@ public class UserServiceImpl implements UserService{
                         .id(user.getId())
                         .services(user.getServices())
                         .pinCode(user.getPinCode())
+                        .password(user.getPassword())
+                        .mobile(user.getMobile())
                         .role(Role.valueOf(user.getRole()))
                         .userName(user.getUserName())
                         .email(user.getEmail())
                         .build()
-
         ).collect(Collectors.toList());
     }
 
@@ -104,8 +112,10 @@ public class UserServiceImpl implements UserService{
         user.setUserName(userModel.getUserName());
         user.setEmail(userModel.getEmail());
         user.setRole(userModel.getRole().name());
+        user.setMobile(userModel.getMobile());
         user.setPassword(userModel.getPassword());
         user.setPinCode(userModel.getPinCode());
+        user.setServices(userModel.getServices());
         userRepository.save(user);
         copyProperties(user, userModel);
         return userModel;
@@ -160,5 +170,16 @@ public class UserServiceImpl implements UserService{
         copyProperties(user, userModel);
         userModel.setRole(Role.valueOf(user.getRole()));
         return userModel;
+    }
+
+    @Override
+    public String deleteUser(long id) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(
+                        "User not found by given user id: "+ id,
+                        "USER_NOT_FOUND"
+                ));
+        userRepository.delete(user);
+        return "Delete User Successfully!";
     }
 }

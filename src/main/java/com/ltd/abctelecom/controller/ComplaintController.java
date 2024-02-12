@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8082")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("abctelecom")
+@RequestMapping("abctelecom/customer")
 public class ComplaintController {
 
     @Autowired
     ComplaintService complaintService;
 
-    @PostMapping("customer/{uid}/complaint")
-    ResponseEntity<UserModel> createComplaint(
+    @PostMapping("{uid}/complaint")
+    ResponseEntity<ComplaintModel> createComplaint(
             @PathVariable Long uid,
             @RequestBody ComplaintModel complaintModel){
-        UserModel user = complaintService.createComplaint(uid, complaintModel);
-        return new  ResponseEntity(user, HttpStatus.CREATED);
+        ComplaintModel complaint = complaintService.createComplaint(uid, complaintModel);
+        return new  ResponseEntity(complaint, HttpStatus.CREATED);
     }
 
-    @GetMapping("complaint/{status}")
-    ResponseEntity<List<ComplaintModel>> getAllComplaintsByStatus(@PathVariable String status){
-        List<ComplaintModel> complains = complaintService.getAllComplaintsByStatus(status);
+    @GetMapping("complaints")
+    ResponseEntity<List<ComplaintModel>> getAllComplaints(){
+        List<ComplaintModel> complains = complaintService.getAllComplaints();
         return ResponseEntity.ok(complains);
     }
 
@@ -68,7 +68,12 @@ public class ComplaintController {
 
         ComplaintModel complaintModel = complaintService.jobNotDone(cid);
         return ResponseEntity.ok(complaintModel);
+    }
 
+    @PutMapping("complaint")
+    ResponseEntity<ComplaintModel> saveFeedback(@RequestBody ComplaintModel cmpModel){
+        ComplaintModel complaintModel = complaintService.saveFeedback(cmpModel);
+        return ResponseEntity.ok(complaintModel);
     }
 
 }

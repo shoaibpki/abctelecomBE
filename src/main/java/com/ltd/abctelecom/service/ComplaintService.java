@@ -7,9 +7,9 @@ import com.ltd.abctelecom.model.UserModel;
 import java.util.List;
 
 public interface ComplaintService {
-    UserModel createComplaint(Long uid, ComplaintModel complaintModel);
+    ComplaintModel createComplaint(Long uid, ComplaintModel complaintModel);
 
-    List<ComplaintModel> getAllComplaintsByStatus(String status);
+    List<ComplaintModel> getAllComplaints();
 
     UserModel searchEngineerByPinCode(Long cid);
 
@@ -20,4 +20,5 @@ public interface ComplaintService {
     List<Complaint> getComplaintsByEngineerId(Long uid);
 
     ComplaintModel jobNotDone(Long cid);
+    ComplaintModel saveFeedback(ComplaintModel complaint);
 }

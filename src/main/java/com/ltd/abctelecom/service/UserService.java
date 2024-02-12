@@ -18,4 +18,6 @@ public interface UserService {
     UserModel assignServiceToCustomer(Long uid, Long sid);
 
     UserModel deleteServiceFromUser(Long uid, Long sid);
+
+    String deleteUser(long id);
 }

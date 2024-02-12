@@ -6,12 +6,10 @@ import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.ServiceRepository;
 import com.ltd.abctelecom.repository.UserRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -25,13 +23,14 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
-    ServiceRepository serviceRepository;
+    private ServiceRepository serviceRepository;
 
     @InjectMocks
     UserService userService = new UserServiceImpl();
+
 
     @DisplayName("Login - Success Scenario")
     @Test
@@ -99,7 +98,7 @@ class UserServiceImplTest {
     }
 
     @DisplayName("Create User")
-    @Disabled
+//    @Disabled
     @Test
     public void createUserTest(){
         // Mocking
@@ -121,6 +120,7 @@ class UserServiceImplTest {
 
     private UserModel getMockUserModel() {
         return UserModel.builder()
+                .id(1L)
                 .userName("Shoaib")
                 .email("shoaib@xyz.com")
                 .password("123")

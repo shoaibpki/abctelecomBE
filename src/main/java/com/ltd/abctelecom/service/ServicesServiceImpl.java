@@ -42,7 +42,9 @@ public class ServicesServiceImpl implements ServicesService{
         return services.stream().map( service ->
             ServiceModel.builder()
                     .serviceId(service.getServiceId())
+                    .Description(service.getDescription())
                     .name(service.getName())
+                    .users(service.getUsers())
                     .build()
         ).collect(Collectors.toList());
     }

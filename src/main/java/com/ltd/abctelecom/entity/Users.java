@@ -1,7 +1,5 @@
 package com.ltd.abctelecom.entity;
 
-import com.ltd.abctelecom.model.Role;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,17 +22,12 @@ public class Users {
     private Long id;
     private String userName;
     private String password;
-
-    @PrimaryKeyJoinColumn
+    private String mobile;
     private String email;
-
     private String role;
     private String pinCode;
 
-    @ManyToMany(cascade = {
-            CascadeType.MERGE,
-            CascadeType.PERSIST
-    })
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "customer_service",
             joinColumns = {@JoinColumn(name = "customer_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}

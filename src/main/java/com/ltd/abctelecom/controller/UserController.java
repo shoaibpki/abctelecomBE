@@ -1,7 +1,5 @@
 package com.ltd.abctelecom.controller;
 
-import com.ltd.abctelecom.entity.Users;
-import com.ltd.abctelecom.model.ServiceModel;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.service.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8082")
+import static org.springframework.http.ResponseEntity.ok;
+
+@CrossOrigin(origins = "*")
 @RequestMapping("abctelecom/users")
 @RestController
 @Log4j2
@@ -52,7 +52,13 @@ public class UserController {
             @PathVariable Long sid){
         UserModel userModel =
                 userService.assignServiceToCustomer(uid, sid);
-        return ResponseEntity.ok(userModel);
+        return ok(userModel);
+    }
+
+    @DeleteMapping("{id}")
+    ResponseEntity<String> deleteUser(@PathVariable long id){
+        String msg = userService.deleteUser(id);
+        return new  ResponseEntity(msg, HttpStatus.OK);
     }
 
     @DeleteMapping("{uid}/service/{sid}")
@@ -61,7 +67,7 @@ public class UserController {
             @PathVariable Long sid){
         UserModel userModel =
                 userService.deleteServiceFromUser(uid, sid);
-        return ResponseEntity.ok(userModel);
+        return ok(userModel);
 
     }
 

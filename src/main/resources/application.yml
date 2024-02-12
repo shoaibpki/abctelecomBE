@@ -4,7 +4,7 @@ spring:
   application:
     name: "ABC-TELECOM"
   datasource:
-    url: jdbc:mysql://localhost:3306/abctelecom?createDatabaseIfNotExist=true&autoReconnect=true
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/abctelecom
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
