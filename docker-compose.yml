@@ -15,4 +15,5 @@ services:
     ports:
       - '3307:3306'
     environment:
+      - MYSQL_DATABASE=abctelecom
       - MYSQL_ROOT_PASSWORD=root

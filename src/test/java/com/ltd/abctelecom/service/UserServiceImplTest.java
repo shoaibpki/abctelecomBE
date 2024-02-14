@@ -6,6 +6,7 @@ import com.ltd.abctelecom.model.Role;
 import com.ltd.abctelecom.model.UserModel;
 import com.ltd.abctelecom.repository.ServiceRepository;
 import com.ltd.abctelecom.repository.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -98,7 +99,7 @@ class UserServiceImplTest {
     }
 
     @DisplayName("Create User")
-//    @Disabled
+    @Disabled
     @Test
     public void createUserTest(){
         // Mocking
